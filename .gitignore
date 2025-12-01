@@ -1,0 +1,12 @@
+# Environnement Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Base de données SQLite (très important de l'ignorer)
+*.db
+*.sqlite
+
+# Notebooks (checkpoints)
+.ipynb_checkpoints/
