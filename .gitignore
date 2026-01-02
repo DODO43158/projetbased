@@ -1,4 +1,19 @@
-# Environnement Python
+# Ignorer les données de la base SQLite
+data/db.sqlite3
+data/*.db
+
+# Ignorer tout le contenu des bases MongoDB
+data/mongo/db-1/*
+data/mongo/db-2/*
+data/mongo/db-3/*
+
+# Mais garder les dossiers eux-mêmes (optionnel)
+!data/mongo/db-1/.gitkeep
+!data/mongo/db-2/.gitkeep
+!data/mongo/db-3/.gitkeep
+
+# Ignorer l'environnement virtuel et les caches
+venv/
 __pycache__/
 *.pyc
 venv/
