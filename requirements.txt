@@ -1,2 +1,5 @@
+django
+pymongo
+requests
 pandas
 rich
