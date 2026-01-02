@@ -1,0 +1,85 @@
+{% extends 'movies/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🎬 Liste des Films</h2>
+        <span class="badge bg-secondary">{{ movies.paginator.count }} films au total</span>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th>Titre</th>
+                    <th>Année</th>
+                    <th>Note</th>
+                    <th>Votes</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                <tr>
+                    <td>
+                        <strong>{{ movie.primaryTitle }}</strong>
+                        <br>
+                        <small class="text-muted">{{ movie.originalTitle }}</small>
+                    </td>
+                    <td>{{ movie.startYear|default:"-" }}</td>
+                    <td>
+                        {% if movie.rating %}
+                            <span class="badge bg-warning text-dark">⭐ {{ movie.rating.averageRating }}</span>
+                        {% else %}
+                            <span class="text-muted small">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if movie.rating %}
+                            {{ movie.rating.numVotes }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'movie_detail' movie.movie_id %}" class="btn btn-sm btn-outline-primary">
+                            Voir détails
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">Aucun film trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if movies.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; Début</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ movies.previous_page_number }}">Précédent</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">Page {{ movies.number }} sur {{ movies.paginator.num_pages }}</span>
+            </li>
+
+            {% if movies.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ movies.next_page_number }}">Suivant</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ movies.paginator.num_pages }}">Fin &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

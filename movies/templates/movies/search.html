@@ -1,0 +1,36 @@
+{% extends 'movies/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Résultats de recherche pour "{{ query }}"</h2>
+    <p class="text-muted">{{ movies|length }} résultat(s) trouvé(s)</p>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+        {% for movie in movies %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.primaryTitle }}</h5>
+                    <p class="card-text text-muted small">
+                        Type: {{ movie.titleType }} | Année: {{ movie.startYear }}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="{% url 'movie_detail' movie.movie_id %}" class="btn btn-primary btn-sm w-100">
+                        Détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Aucun film trouvé pour cette recherche.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+    </div>
+</div>
+{% endblock %}

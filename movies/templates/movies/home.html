@@ -1,0 +1,96 @@
+{% extends 'movies/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-dark text-white rounded-3 shadow">
+    <div class="container-fluid py-5">
+        <div class="d-flex align-items-center mb-4">
+            <img src="{% static 'images/logo-transparent-png.png' %}" alt="Logo" width="80" height="80" class="me-3 shadow-sm">
+            <h1 class="display-5 fw-bold mb-0">Bienvenue sur CineExplore</h1>
+        </div>
+        <p class="col-md-8 fs-4">Explorez des millions de données cinématographiques propulsées par Django, SQLite et MongoDB.</p>
+        
+        <form action="{% url 'search' %}" method="get" class="d-flex mt-4">
+            <input name="q" class="form-control form-control-lg me-2" type="search" placeholder="Rechercher un film ou un acteur..." aria-label="Search">
+            <button class="btn btn-primary btn-lg px-4" type="submit">Rechercher</button>
+        </form>
+    </div>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-md-4">
+        <div class="card border-primary shadow-sm p-3">
+            <h3 class="fw-bold text-primary">36 859</h3>
+            <p class="text-muted mb-0">Films indexés (SQLite)</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-success shadow-sm p-3">
+            <h3 class="fw-bold text-success">145 847</h3>
+            <p class="text-muted mb-0">Acteurs & Staff</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-info shadow-sm p-3">
+            <h3 class="fw-bold text-info">MongoDB</h3>
+            <p class="text-muted mb-0">Replica Set Actif</p>
+        </div>
+    </div>
+</div>
+
+<h2 class="mb-4 fw-bold text-dark">🏆 Top 10 des films les mieux notés</h2>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for movie in top_movies %}
+    <div class="col">
+        <div class="card h-100 shadow border-0 movie-card">
+            <div class="position-relative">
+                {% if movie.poster_url and movie.poster_url != "N/A" %}
+                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.primaryTitle }}" style="height: 450px; object-fit: cover;">
+                {% else %}
+                    <img src="https://via.placeholder.com/450x600.png?text=Image+Indisponible" class="card-img-top" alt="Image indisponible" style="height: 450px; object-fit: cover;">
+                {% endif %}
+                
+                <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow-sm fs-6">
+                    ⭐ {% if movie.rating %}{{ movie.rating.averageRating }}{% else %}N/A{% endif %}
+                </span>
+            </div>
+
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-bold text-truncate" title="{{ movie.primaryTitle }}">{{ movie.primaryTitle }}</h5>
+                <p class="card-text text-muted mb-3">{{ movie.startYear|default:"Année inconnue" }}</p>
+                
+                <div class="mt-auto">
+                    <a href="{% url 'movie_detail' movie.movie_id %}" class="btn btn-primary w-100 rounded-pill shadow-sm py-2">
+                        Voir les Détails
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-center text-muted py-5">Aucun film trouvé dans la base SQLite.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="text-center mt-5 mb-5">
+    <a href="{% url 'movie_list' %}" class="btn btn-outline-dark btn-lg px-5 rounded-pill shadow-sm">
+        Explorer tous les films
+    </a>
+</div>
+
+<style>
+    /* Effets de survol sur les cartes */
+    .movie-card {
+        transition: all 0.3s ease-in-out;
+    }
+    .movie-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3) !important;
+    }
+    .card-img-top {
+        border-bottom: 2px solid #f8f9fa;
+    }
+</style>
+{% endblock %}

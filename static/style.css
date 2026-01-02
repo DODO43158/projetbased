@@ -1,0 +1,16 @@
+/* Style pour les cartes de films */
+.card {
+    transition: transform 0.2s;
+    border-radius: 10px;
+}
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Style pour les badges de notes */
+.badge-rating {
+    background-color: #f5c518; /* Jaune IMDb */
+    color: #000;
+    font-weight: bold;
+}

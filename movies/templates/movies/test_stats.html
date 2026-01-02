@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>CineExplorer - Test Infra</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; line-height: 1.6; }
+        .box { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Tableau de bord de l'infrastructure</h1>
+    
+    <div class="box">
+        <h2>Cluster MongoDB (NoSQL)</h2>
+        <p>Nombre de films en base : <strong>{{ count_mongo }}</strong></p>
+        <p>Statut : <span class="success">{{ infra_status }}</span></p>
+    </div>
+
+    <div class="box">
+        <h2>SQLite (Relationnel)</h2>
+        <p>Nombre de tables système : <strong>{{ count_sqlite }}</strong></p>
+    </div>
+
+    <p><em>Note : Ces données proviennent de deux systèmes de stockage différents fonctionnant en simultané.</em></p>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends 'movies/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    {% if movie %}
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ movie.title }} ({{ movie.year }})</h1>
+            <span class="badge bg-warning text-dark fs-4">⭐ {{ movie.rating.averageRating }}</span>
+        </div>
+        <p class="text-muted">{{ movie.runtime }} min | {{ movie.genres|join:", " }}</p>
+        <hr>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4>🎥 Réalisation</h4>
+                <ul>
+                    {% for director in movie.directors %}
+                        <li>{{ director.name }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <h4>✍️ Scénario</h4>
+                <ul>
+                    {% for writer in movie.writers %}
+                        <li>{{ writer.name }} ({{ writer.category }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-md-8">
+                <h4>🎭 Acteurs principaux</h4>
+                <div class="list-group">
+                    {% for actor in movie.cast %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ actor.name }}
+                            <small class="text-secondary italic">rôle : {{ actor.characters|join:", " }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger">Document 'movies_complete' introuvable pour cet ID dans MongoDB.</div>
+    {% endif %}
+    <a href="{% url 'home' %}" class="btn btn-secondary mt-4">Retour à l'accueil</a>
+</div>
+{% endblock %}
