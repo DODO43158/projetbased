@@ -1,9 +1,9 @@
-# scripts/phase1_sqlite/create_schema.py
+
 
 import sqlite3
 import os
 
-# Nom du fichier de base de données
+
 DB_FILE = os.path.join(os.path.dirname(__file__), '../../data/imdb.db')
 
 def create_connection(db_file):
@@ -20,9 +20,9 @@ def create_connection(db_file):
 def create_tables(conn):
     """Crée toutes les tables du schéma relationnel."""
     
-    # Définitions SQL pour les tables
+    
     sql_statements = [
-        # Table Person (Clé principale)
+        # Clé principale
         """
         CREATE TABLE IF NOT EXISTS Person (
             person_id TEXT PRIMARY KEY,
@@ -31,7 +31,7 @@ def create_tables(conn):
             deathYear INTEGER
         );
         """,
-        # Table Movie (Clé principale)
+        #  Clé principale
         """
         CREATE TABLE IF NOT EXISTS Movie (
             movie_id TEXT PRIMARY KEY,
@@ -44,7 +44,7 @@ def create_tables(conn):
             runtimeMinutes INTEGER
         );
         """,
-        # Table Rating (Relation 1:1 avec Movie)
+        # Table Rating Relation 1:1 avec Movie
         """
         CREATE TABLE IF NOT EXISTS Rating (
             movie_id TEXT PRIMARY KEY,
@@ -53,19 +53,19 @@ def create_tables(conn):
             FOREIGN KEY (movie_id) REFERENCES Movie (movie_id) ON DELETE CASCADE
         );
         """,
-        # Table Genre (Liste de valeurs uniques)
+        
         """
         CREATE TABLE IF NOT EXISTS Genre (
             genre_name TEXT PRIMARY KEY
         );
         """,
-        # Table Profession (Liste de valeurs uniques)
+        
         """
         CREATE TABLE IF NOT EXISTS Profession (
             job_name TEXT PRIMARY KEY
         );
         """,
-        # Table TitleAlias (Relation N:M avec Movie - via `titles.csv`)
+        # Table TitleAlias Relation N:M avec Movie - via `titles.csv`
         """
         CREATE TABLE IF NOT EXISTS TitleAlias (
             movie_id TEXT NOT NULL,
@@ -80,7 +80,7 @@ def create_tables(conn):
             FOREIGN KEY (movie_id) REFERENCES Movie (movie_id) ON DELETE CASCADE
         );
         """,
-        # Table MovieGenre (Relation N:M entre Movie et Genre)
+        # Table MovieGenre Relation N:M entre Movie et Genre
         """
         CREATE TABLE IF NOT EXISTS MovieGenre (
             movie_id TEXT NOT NULL,
@@ -90,7 +90,7 @@ def create_tables(conn):
             FOREIGN KEY (genre_name) REFERENCES Genre (genre_name) ON DELETE CASCADE
         );
         """,
-        # Table PersonProfession (Relation N:M entre Person et Profession)
+        # Table PersonProfession Relation N:M entre Person et Profession
         """
         CREATE TABLE IF NOT EXISTS PersonProfession (
             person_id TEXT NOT NULL,
@@ -100,7 +100,7 @@ def create_tables(conn):
             FOREIGN KEY (job_name) REFERENCES Profession (job_name) ON DELETE CASCADE
         );
         """,
-        # Table MoviePrincipal (Acteurs/Réalisateurs/Scénaristes - de `principals.csv`)
+       
         """
         CREATE TABLE IF NOT EXISTS MoviePrincipal (
             movie_id TEXT NOT NULL,
@@ -113,7 +113,7 @@ def create_tables(conn):
             FOREIGN KEY (person_id) REFERENCES Person (person_id) ON DELETE CASCADE
         );
         """,
-        # Table Character (Personnages joués - de `characters.csv`)
+       
         """
         CREATE TABLE IF NOT EXISTS Character (
             movie_id TEXT NOT NULL,
@@ -136,10 +136,10 @@ def create_tables(conn):
 
 def main():
     """Fonction principale pour créer la base de données et les tables."""
-    # S'assurer que le répertoire 'data' existe
+   
     os.makedirs(os.path.dirname(DB_FILE), exist_ok=True)
     
-    # Supprimer l'ancienne base pour garantir un nouveau départ
+    
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
         print(f"Ancienne base de données supprimée: {DB_FILE}")

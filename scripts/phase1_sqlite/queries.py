@@ -1,28 +1,19 @@
-# scripts/phase1_sqlite/queries.py
-
 import sqlite3
 import os
 
-# Nom du fichier de base de données
+
 DB_FILE = os.path.join(os.path.dirname(__file__), '../../data/imdb.db')
 
 def create_connection(db_file):
     """Crée une connexion à la base de données SQLite."""
     try:
         conn = sqlite3.connect(db_file)
-        conn.row_factory = sqlite3.Row # Permettre l'accès par nom de colonne
+        conn.row_factory = sqlite3.Row 
         return conn
     except sqlite3.Error as e:
         print(f"Erreur de connexion à SQLite: {e}")
         return None
 
-# ======================================================================
-# REQUÊTES T1.3
-# ======================================================================
-
-# ----------------------------------------------------------------------
-# Q1: Filmographie d’un acteur
-# ----------------------------------------------------------------------
 
 def query_actor_filmography(conn, actor_name: str) -> list:
     """
@@ -64,9 +55,7 @@ def query_actor_filmography(conn, actor_name: str) -> list:
     """
     return conn.execute(sql, (f'%{actor_name}%',)).fetchall()
 
-# ----------------------------------------------------------------------
-# Q2: Top N films
-# ----------------------------------------------------------------------
+
 
 def query_top_n_films(conn, genre: str, start_year: int, end_year: int, n: int) -> list:
     """
@@ -113,9 +102,6 @@ def query_top_n_films(conn, genre: str, start_year: int, end_year: int, n: int) 
     """
     return conn.execute(sql, (genre, start_year, end_year, n)).fetchall()
 
-# ----------------------------------------------------------------------
-# Q3: Acteurs multi-rôles
-# ----------------------------------------------------------------------
 
 def query_multi_role_actors(conn) -> list:
     """
@@ -157,9 +143,6 @@ def query_multi_role_actors(conn) -> list:
     """
     return conn.execute(sql).fetchall()
 
-# ----------------------------------------------------------------------
-# Q4: Collaborations (Réalisateurs/Acteur)
-# ----------------------------------------------------------------------
 
 def query_collaborations(conn, actor_name: str) -> list:
     """
@@ -210,9 +193,7 @@ def query_collaborations(conn, actor_name: str) -> list:
     """
     return conn.execute(sql, (f'%{actor_name}%',)).fetchall()
 
-# ----------------------------------------------------------------------
-# Q5: Genres populaires
-# ----------------------------------------------------------------------
+
 
 def query_popular_genres(conn) -> list:
     """
@@ -247,9 +228,7 @@ def query_popular_genres(conn) -> list:
     """
     return conn.execute(sql).fetchall()
 
-# ----------------------------------------------------------------------
-# Q6: Évolution de carrière (CTE - WITH)
-# ----------------------------------------------------------------------
+
 
 def query_career_evolution(conn, actor_name: str) -> list:
     """
@@ -304,9 +283,6 @@ def query_career_evolution(conn, actor_name: str) -> list:
     """
     return conn.execute(sql, (f'%{actor_name}%',)).fetchall()
 
-# ----------------------------------------------------------------------
-# Q7: Classement par genre (RANK() ou ROW_NUMBER())
-# ----------------------------------------------------------------------
 
 def query_genre_ranking(conn) -> list:
     """
@@ -347,9 +323,7 @@ def query_genre_ranking(conn) -> list:
     """
     return conn.execute(sql).fetchall()
 
-# ----------------------------------------------------------------------
-# Q8: Carrière propulsée
-# ----------------------------------------------------------------------
+
 
 def query_breakout_career(conn) -> list:
     """
@@ -401,9 +375,7 @@ def query_breakout_career(conn) -> list:
     return conn.execute(sql).fetchall()
 
 
-# ----------------------------------------------------------------------
-# Q9: Requête libre (Acteurs populaires n'ayant jamais réalisé)
-# ----------------------------------------------------------------------
+
 
 def query_free_style(conn) -> list:
     """
@@ -460,57 +432,55 @@ def query_free_style(conn) -> list:
     return conn.execute(sql).fetchall()
 
 
-# ----------------------------------------------------------------------
-# Fonction principale d'exécution pour les tests
-# ----------------------------------------------------------------------
+
 
 def main():
     conn = create_connection(DB_FILE)
     if conn:
         print("--- Début des tests des 9 requêtes ---")
         
-        # PARAMÈTRES DE TEST
+        
         ACTOR_NAME = "Fred Astaire" 
         GENRE = "Action"
         START_YEAR = 2000
         END_YEAR = 2020
         N = 5
         
-        # Q1
+        
         print(f"\n[Q1] Filmographie de {ACTOR_NAME}:")
         r = query_actor_filmography(conn, ACTOR_NAME)
         for row in r[:3]: print(f"- {row['primaryTitle']} ({row['startYear']}) | Rôle: {row['job'] or 'N/A'}")
 
-        # Q2
+        
         print(f"\n[Q2] Top {N} films '{GENRE}' de {START_YEAR}-{END_YEAR}:")
         r = query_top_n_films(conn, GENRE, START_YEAR, END_YEAR, N)
         for row in r: print(f"- {row['primaryTitle']} ({row['startYear']}) | Note: {row['averageRating']}")
 
-        # Q3
+        
         print("\n[Q3] Acteurs multi-rôles (Top 5):")
         r = query_multi_role_actors(conn)
         for row in r[:5]: print(f"- {row['primaryName']} dans '{row['primaryTitle']}' | Rôles: {row['num_roles']}")
         
-        # Q4
+        
         print(f"\n[Q4] Collaborations avec {ACTOR_NAME}:")
         r = query_collaborations(conn, ACTOR_NAME)
         for row in r: print(f"- {row['director_name']} | Films: {row['collaboration_count']}")
 
-        # Q5
+        
         print("\n[Q5] Genres populaires (Note moyenne > 7.0, > 50 films):")
         r = query_popular_genres(conn)
         for row in r[:5]: print(f"- {row['genre_name']} | Note: {row['avg_rating']:.2f} | Films: {row['film_count']:,}")
 
-        # Q6
+        
         print(f"\n[Q6] Évolution de carrière de {ACTOR_NAME} par décennie:")
         r = query_career_evolution(conn, ACTOR_NAME)
         for row in r: print(f"- Décennie {row['decade']} | Films: {row['num_films']} | Note Moyenne: {row['avg_rating']:.2f}")
 
-        # Q7
+        
         print("\n[Q7] Classement par genre (Top 3 par genre, votes > 1000, 3 premiers genres affichés):")
         r = query_genre_ranking(conn)
         
-        # Afficher uniquement les résultats pour les 3 premiers genres distincts
+        
         genres_seen = set()
         count = 0
         for row in r:
@@ -521,12 +491,12 @@ def main():
                 print(f"--- Genre: {row['genre_name']} ---")
             print(f"  {row['rank_within_genre']}. {row['primaryTitle']} ({row['averageRating']})")
 
-        # Q8
+        
         print("\n[Q8] Personnes ayant percé (Top 10):")
         r = query_breakout_career(conn)
         for row in r: print(f"- {row['primaryName']}")
         
-        # Q9
+        
         print("\n[Q9] Acteurs célèbres n'ayant jamais réalisé (Requête libre):")
         r = query_free_style(conn)
         for row in r: print(f"- {row['primaryName']} | Films: {row['num_films']} | Note Moyenne: {row['avg_rating']:.2f}")

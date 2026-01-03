@@ -1,5 +1,3 @@
-# scripts/phase1_sqlite/benchmark.py
-
 import sqlite3
 import os
 import time
@@ -15,9 +13,9 @@ from queries import (
     query_free_style
 )
 
-# --- Configuration ---
+
 DB_FILE = os.path.join(os.path.dirname(__file__), '../../data/imdb.db')
-NUM_RUNS = 5 # Nombre d'exécutions pour la moyenne
+NUM_RUNS = 5 
 TEST_PARAMS = {
     'actor_name': "Tom Hanks",
     'genre': "Drama",
@@ -38,13 +36,13 @@ def create_connection_benchmark(db_file):
 def run_benchmark(conn, func, name, *args):
     """Exécute une fonction de requête NUM_RUNS fois et calcule le temps moyen."""
     
-    # Initialisation du moteur de requêtes pour la première exécution (warm-up)
+    
     func(conn, *args) 
 
     total_time = 0
     results = None
     
-    # Exécutions chronométrées
+    
     for _ in range(NUM_RUNS):
         start_time = time.time()
         results = func(conn, *args)
@@ -53,7 +51,7 @@ def run_benchmark(conn, func, name, *args):
         
     avg_time = total_time / NUM_RUNS
     
-    # Stocker et retourner le temps moyen et le nombre de résultats (pour la vérification)
+    
     return {
         'query_name': name,
         'avg_time_ms': avg_time * 1000,
@@ -67,7 +65,7 @@ def main():
 
     print(f"--- Benchmark sur {DB_FILE} ({NUM_RUNS} exécutions moyennes) ---")
     
-    # Liste des requêtes et de leurs paramètres de test
+    
     queries_to_test = [
         (query_actor_filmography, "Q1", TEST_PARAMS['actor_name']),
         (query_top_n_films, "Q2", TEST_PARAMS['genre'], TEST_PARAMS['start_year'], TEST_PARAMS['end_year'], TEST_PARAMS['n']),
@@ -87,7 +85,7 @@ def main():
             result = run_benchmark(conn, func, name, *args)
             benchmark_results.append(result)
         except Exception as e:
-            print(f"❌ Erreur lors du benchmark de {name}: {e}")
+            print(f" Erreur lors du benchmark de {name}: {e}")
             benchmark_results.append({'query_name': name, 'avg_time_ms': 'ERROR', 'num_results': 0})
 
     conn.close()

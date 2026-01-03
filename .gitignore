@@ -1,7 +1,3 @@
-# Ignorer les données de la base SQLite
-data/db.sqlite3
-data/*.db
-
 # Ignorer tout le contenu des bases MongoDB
 data/mongo/db-1/*
 data/mongo/db-2/*
@@ -18,10 +14,6 @@ __pycache__/
 *.pyc
 venv/
 .env
-
-# Base de données SQLite (très important de l'ignorer)
-*.db
-*.sqlite
 
 # Notebooks (checkpoints)
 .ipynb_checkpoints/
